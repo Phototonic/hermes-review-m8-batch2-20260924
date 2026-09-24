@@ -1,0 +1,12 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: m8-batch-contract
+        run: |
+          python3 -c 'import importlib, os; m = importlib.import_module("m8_batch_contract") if os.path.exists("m8_batch_contract.py") else None; assert m is not None, "m8_batch_contract.py absent"; assert m.batch_ready() is True, "batch_ready contract"; print("validation ok")'
